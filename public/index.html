@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#212121">
+<title>AN AI</title>
+<style>
+:root {
+  --bg:#212121;--panel:#171717;--text:#ececec;
+  --muted:#a0a0a0;--border:#383838;--hover:#303030;
+  --user:#303030;--accent:#10a37f;
+}
+body.light {
+  --bg:#ffffff;--panel:#f7f7f8;--text:#252525;
+  --muted:#737373;--border:#e5e5e5;--hover:#ececec;
+  --user:#f0f0f0;--accent:#0d9373;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font-family:Arial,Helvetica,sans-serif;height:100dvh;overflow:hidden}
+button,input,textarea{font:inherit}
+button{cursor:pointer;color:inherit}
+.layout{height:100dvh;display:flex}
+.sidebar{width:255px;background:var(--panel);padding:14px;
+display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:10px;padding:8px 4px;
+font-size:19px;font-weight:700}
+.logo{width:35px;height:35px;border-radius:12px;background:var(--accent);
+display:grid;place-items:center;color:white;font-weight:bold}
+.side-btn{border:1px solid var(--border);background:transparent;
+padding:12px;border-radius:10px;text-align:left;width:100%}
+.side-btn:hover,.icon-btn:hover{background:var(--hover)}
+.side-label{color:var(--muted);font-size:12px;margin:15px 5px 0}
+.history{font-size:13px;color:var(--muted);padding:9px 7px}
+.side-bottom{margin-top:auto;display:grid;gap:8px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column;position:relative}
+.topbar{height:62px;display:flex;align-items:center;justify-content:space-between;
+padding:0 20px;border-bottom:1px solid var(--border)}
+.top-title{font-size:16px;font-weight:600}
+.top-actions{display:flex;gap:8px}
+.icon-btn{width:38px;height:38px;border:0;background:transparent;
+border-radius:10px;font-size:18px}
+.mobile-brand{display:none;align-items:center;gap:8px;font-weight:bold}
+.messages{flex:1;overflow:auto;padding:28px 20px 160px}
+.message{max-width:760px;width:100%;margin:0 auto 25px;
+display:flex;gap:13px;align-items:flex-start;line-height:1.75;
+overflow-wrap:anywhere;white-space:pre-wrap}
+.avatar{width:30px;height:30px;flex-shrink:0;border-radius:10px;
+display:grid;place-items:center;background:var(--accent);color:white;
+font-size:12px;font-weight:bold}
+.message.user .avatar{background:#626262}
+.content{padding-top:2px;min-width:0;flex:1}
+.welcome{max-width:760px;margin:8vh auto 30px;text-align:center}
+.welcome-logo{margin:0 auto 20px;width:60px;height:60px;border-radius:20px;
+background:var(--accent);display:grid;place-items:center;color:white;
+font-size:26px;font-weight:bold}
+.welcome h1{font-size:30px;margin:0 0 10px}
+.welcome p{color:var(--muted);margin:0}
+.composer-area{position:absolute;bottom:0;left:0;right:0;padding:20px;
+background:linear-gradient(transparent,var(--bg) 25%)}
+.composer-wrap{max-width:760px;margin:auto}
+.composer{display:flex;align-items:flex-end;gap:10px;padding:10px 12px;
+border:1px solid var(--border);background:var(--panel);border-radius:22px;
+box-shadow:0 5px 25px #00000012}
+textarea{flex:1;min-width:0;resize:none;max-height:160px;border:0;outline:0;
+background:transparent;color:var(--text);padding:9px 2px;line-height:1.5}
+textarea::placeholder{color:var(--muted)}
+.send{width:38px;height:38px;border:0;border-radius:13px;
+background:var(--accent);color:white;font-size:19px}
+.send:disabled{opacity:.45;cursor:default}
+.disclaimer{text-align:center;color:var(--muted);font-size:11px;padding-top:10px}
+.status{display:inline-block;width:7px;height:7px;background:var(--accent);
+border-radius:50%;margin-right:6px}
+.hidden{display:none!important}
+@media(max-width:650px){
+.sidebar{display:none}
+.topbar{height:56px;padding:0 12px}
+.mobile-brand{display:flex}
+.messages{padding:22px 14px 155px}
+.welcome{margin-top:10vh}
+.welcome h1{font-size:26px}
+.composer-area{padding:12px}
+.message{gap:10px}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand"><div class="logo">AN</div><span>AN AI</span></div>
+  <button class="side-btn" id="newSide">＋ &nbsp; New chat</button>
+  <div class="side-label">YOUR ASSISTANT</div>
+  <div class="history">✦ &nbsp; Artificial Neural Intelligence</div>
+  <div class="side-bottom">
+    <button class="side-btn" id="themeSide">☀️ &nbsp; Switch theme</button>
+    <div class="history">● &nbsp; <span class="status"></span>AI assistant</div>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <div class="mobile-brand"><div class="logo">AN</div> AN AI</div>
+    <div class="top-title">Chat <span style="color:var(--muted);font-weight:400">▾</span></div>
+    <div class="top-actions">
+      <button class="icon-btn" id="newTop" title="New chat">＋</button>
+      <button class="icon-btn" id="themeTop" title="Switch theme">☼</button>
+    </div>
+  </header>
+
+  <section class="messages" id="chat">
+    <div class="welcome" id="welcome">
+      <div class="welcome-logo">AN</div>
+      <h1>What can I help with?</h1>
+      <p>Your ideas start here. Ask AN AI anything.</p>
+    </div>
+  </section>
+
+  <div class="composer-area">
+    <div class="composer-wrap">
+      <form class="composer" id="form">
+        <textarea id="input" rows="1" placeholder="Message AN AI..." required></textarea>
+        <button class="send" id="send" type="submit" aria-label="Send">↑</button>
+      </form>
+      <div class="disclaimer">AN AI can make mistakes. Check important information.</div>
+    </div>
+  </div>
+</main>
+</div>
+
+<script>
+const form=document.getElementById('form');
+const input=document.getElementById('input');
+const chat=document.getElementById('chat');
+const send=document.getElementById('send');
+const welcome=document.getElementById('welcome');
+
+function addMessage(text,type){
+  welcome.classList.add('hidden');
+  const row=document.createElement('div');
+  row.className='message '+type;
+  const avatar=document.createElement('div');
+  avatar.className='avatar';
+  avatar.textContent=type==='user'?'Y':'AN';
+  const content=document.createElement('div');
+  content.className='content';
+  content.textContent=text;
+  row.append(avatar,content);
+  chat.appendChild(row);
+  chat.scrollTop=chat.scrollHeight;
+  return content;
+}
+
+async function submitMessage(message){
+  if(!message||send.disabled)return;
+  addMessage(message,'user');
+  input.value='';
+  input.style.height='auto';
+  send.disabled=true;
+  const answer=addMessage('Thinking…','bot');
+
+  try{
+    const response=await fetch('/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message})
+    });
+    const data=await response.json();
+    if(!response.ok) throw new Error(data.error||'Request failed.');
+    answer.textContent=data.reply||'No reply received.';
+  }catch(error){
+    answer.textContent='Could not get a reply: '+error.message;
+  }finally{
+    send.disabled=false;
+    input.focus();
+    chat.scrollTop=chat.scrollHeight;
+  }
+}
+
+form.addEventListener('submit',e=>{
+  e.preventDefault();
+  submitMessage(input.value.trim());
+});
+input.addEventListener('input',()=>{
+  input.style.height='auto';
+  input.style.height=Math.min(input.scrollHeight,160)+'px';
+});
+input.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){
+    e.preventDefault();
+    form.requestSubmit();
+  }
+});
+
+function newChat(){
+  chat.innerHTML='';
+  welcome.classList.remove('hidden');
+  chat.appendChild(welcome);
+  input.value='';
+  input.focus();
+}
+document.getElementById('newSide').addEventListener('click',newChat);
+document.getElementById('newTop').addEventListener('click',newChat);
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  const light=document.body.classList.contains('light');
+  try{localStorage.setItem('an-ai-theme',light?'light':'dark')}catch(e){}
+}
+document.getElementById('themeSide').addEventListener('click',toggleTheme);
+document.getElementById('themeTop').addEventListener('click',toggleTheme);
+try{
+  if(localStorage.getItem('an-ai-theme')==='light')document.body.classList.add('light');
+}catch(e){}
+</script>
+</body>
+</html>
