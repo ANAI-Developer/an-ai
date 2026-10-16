@@ -1,0 +1,12 @@
+{
+  "id": "/",
+  "name": "AN AI - Personal AI Assistant",
+  "short_name": "AN AI",
+  "description": "Your personal Artificial Neural Intelligence assistant",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#080b18",
+  "background_color": "#080b18"
+}
