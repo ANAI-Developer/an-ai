@@ -3,215 +3,689 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#212121">
-<title>AN AI</title>
+<meta name="theme-color" content="#080b16">
+<title>AN AI — Artificial Neural Intelligence</title>
+
 <style>
-:root {
-  --bg:#212121;--panel:#171717;--text:#ececec;
-  --muted:#a0a0a0;--border:#383838;--hover:#303030;
-  --user:#303030;--accent:#10a37f;
-}
-body.light {
-  --bg:#ffffff;--panel:#f7f7f8;--text:#252525;
-  --muted:#737373;--border:#e5e5e5;--hover:#ececec;
-  --user:#f0f0f0;--accent:#0d9373;
+:root{
+  --bg:#080b16;
+  --side:#0b1020;
+  --panel:#10172a;
+  --panel2:#151e35;
+  --text:#f5f6ff;
+  --muted:#929bb7;
+  --border:rgba(255,255,255,.09);
+  --blue:#6688ff;
+  --purple:#a16bff;
+  --user:#26396d;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
-font-family:Arial,Helvetica,sans-serif;height:100dvh;overflow:hidden}
-button,input,textarea{font:inherit}
-button{cursor:pointer;color:inherit}
-.layout{height:100dvh;display:flex}
-.sidebar{width:255px;background:var(--panel);padding:14px;
-display:flex;flex-direction:column;gap:12px;flex-shrink:0}
-.brand{display:flex;align-items:center;gap:10px;padding:8px 4px;
-font-size:19px;font-weight:700}
-.logo{width:35px;height:35px;border-radius:12px;background:var(--accent);
-display:grid;place-items:center;color:white;font-weight:bold}
-.side-btn{border:1px solid var(--border);background:transparent;
-padding:12px;border-radius:10px;text-align:left;width:100%}
-.side-btn:hover,.icon-btn:hover{background:var(--hover)}
-.side-label{color:var(--muted);font-size:12px;margin:15px 5px 0}
-.history{font-size:13px;color:var(--muted);padding:9px 7px}
-.side-bottom{margin-top:auto;display:grid;gap:8px}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  min-height:100vh;overflow:hidden
+}
+button,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,textarea:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.app{display:flex;height:100dvh;min-height:0}
+.sidebar{
+  width:265px;flex-shrink:0;background:var(--side);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:19px 14px;
+  transition:width .25s,transform .25s;z-index:30
+}
+.brand{display:flex;align-items:center;gap:11px;padding:3px 5px 25px}
+.logo{
+  width:43px;height:43px;flex-shrink:0;border-radius:15px;
+  display:grid;place-items:center;font-size:24px;
+  background:linear-gradient(135deg,#5278ff,#a45bff);
+  box-shadow:0 0 25px #775dff55
+}
+.brand-name{font-size:21px;font-weight:900;letter-spacing:.4px}
+.brand-name span{
+  background:linear-gradient(90deg,#77a9ff,#c18aff);
+  -webkit-background-clip:text;background-clip:text;color:transparent
+}
+.brand-sub{font-size:9px;letter-spacing:1.5px;color:var(--muted);margin-top:2px}
+.new-chat{
+  width:100%;padding:13px 14px;border:1px solid #8191ff55;
+  border-radius:14px;background:linear-gradient(120deg,#28386b,#39265d);
+  color:white;text-align:left;font-weight:750;display:flex;
+  align-items:center;gap:11px;transition:.2s
+}
+.new-chat:hover{border-color:#a9b4ff;transform:translateY(-1px)}
+.plus{font-size:22px;line-height:18px}
+.side-label{
+  font-size:10px;font-weight:800;letter-spacing:1.5px;
+  color:#7884a6;margin:27px 9px 12px
+}
+.history{flex:1;min-height:0;overflow-y:auto}
+.history-item{
+  width:100%;display:flex;align-items:center;gap:9px;
+  text-align:left;padding:11px 10px;border:0;border-radius:11px;
+  background:transparent;color:#b6bfd8;font-size:12px;margin-bottom:4px
+}
+.history-item:hover,.history-item.active{background:#1b2540;color:white}
+.history-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.empty-history{font-size:12px;color:#75809e;padding:5px 10px;line-height:1.7}
+.sidebar-bottom{border-top:1px solid var(--border);padding-top:13px}
+.side-link{
+  width:100%;display:flex;align-items:center;gap:11px;
+  padding:12px 11px;border:0;border-radius:12px;
+  background:transparent;color:#aeb8d1;text-align:left;font-size:13px
+}
+.side-link:hover{background:var(--panel2);color:white}
+.side-icon{font-size:18px;width:23px;text-align:center}
+.pro-card{
+  padding:13px;border-radius:15px;margin-top:10px;
+  border:1px solid #a17bff44;
+  background:linear-gradient(135deg,#202955,#302044)
+}
+.pro-card strong{font-size:12px;display:block;margin-bottom:5px}
+.pro-card p{font-size:10px;color:#c0c5e0;line-height:1.6;margin:0 0 10px}
+.pro-card button{
+  width:100%;padding:9px;border:0;border-radius:9px;
+  background:linear-gradient(100deg,#6688ff,#a16bff);
+  color:white;font-size:11px;font-weight:800
+}
 .main{flex:1;min-width:0;display:flex;flex-direction:column;position:relative}
-.topbar{height:62px;display:flex;align-items:center;justify-content:space-between;
-padding:0 20px;border-bottom:1px solid var(--border)}
-.top-title{font-size:16px;font-weight:600}
-.top-actions{display:flex;gap:8px}
-.icon-btn{width:38px;height:38px;border:0;background:transparent;
-border-radius:10px;font-size:18px}
-.mobile-brand{display:none;align-items:center;gap:8px;font-weight:bold}
-.messages{flex:1;overflow:auto;padding:28px 20px 160px}
-.message{max-width:760px;width:100%;margin:0 auto 25px;
-display:flex;gap:13px;align-items:flex-start;line-height:1.75;
-overflow-wrap:anywhere;white-space:pre-wrap}
-.avatar{width:30px;height:30px;flex-shrink:0;border-radius:10px;
-display:grid;place-items:center;background:var(--accent);color:white;
-font-size:12px;font-weight:bold}
-.message.user .avatar{background:#626262}
-.content{padding-top:2px;min-width:0;flex:1}
-.welcome{max-width:760px;margin:8vh auto 30px;text-align:center}
-.welcome-logo{margin:0 auto 20px;width:60px;height:60px;border-radius:20px;
-background:var(--accent);display:grid;place-items:center;color:white;
-font-size:26px;font-weight:bold}
-.welcome h1{font-size:30px;margin:0 0 10px}
-.welcome p{color:var(--muted);margin:0}
-.composer-area{position:absolute;bottom:0;left:0;right:0;padding:20px;
-background:linear-gradient(transparent,var(--bg) 25%)}
-.composer-wrap{max-width:760px;margin:auto}
-.composer{display:flex;align-items:flex-end;gap:10px;padding:10px 12px;
-border:1px solid var(--border);background:var(--panel);border-radius:22px;
-box-shadow:0 5px 25px #00000012}
-textarea{flex:1;min-width:0;resize:none;max-height:160px;border:0;outline:0;
-background:transparent;color:var(--text);padding:9px 2px;line-height:1.5}
-textarea::placeholder{color:var(--muted)}
-.send{width:38px;height:38px;border:0;border-radius:13px;
-background:var(--accent);color:white;font-size:19px}
-.send:disabled{opacity:.45;cursor:default}
-.disclaimer{text-align:center;color:var(--muted);font-size:11px;padding-top:10px}
-.status{display:inline-block;width:7px;height:7px;background:var(--accent);
-border-radius:50%;margin-right:6px}
-.hidden{display:none!important}
-@media(max-width:650px){
-.sidebar{display:none}
-.topbar{height:56px;padding:0 12px}
-.mobile-brand{display:flex}
-.messages{padding:22px 14px 155px}
-.welcome{margin-top:10vh}
-.welcome h1{font-size:26px}
-.composer-area{padding:12px}
-.message{gap:10px}
+.topbar{
+  height:69px;flex-shrink:0;padding:0 25px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);background:rgba(8,11,22,.88);
+  backdrop-filter:blur(20px);z-index:5
+}
+.top-left{display:flex;align-items:center;gap:12px}
+.menu-btn,.theme-btn{
+  width:39px;height:39px;border:1px solid var(--border);
+  border-radius:12px;background:var(--panel);color:var(--text);
+  display:grid;place-items:center;font-size:18px
+}
+.menu-btn{display:none}
+.top-title{font-size:13px;font-weight:750}
+.status{font-size:10px;color:#8f9ab7;margin-top:3px}
+.status:before{
+  content:"";display:inline-block;width:6px;height:6px;
+  background:#5ee2aa;border-radius:50%;margin-right:6px
+}
+.top-right{display:flex;align-items:center;gap:10px}
+.pro-top{
+  padding:10px 14px;border:0;border-radius:11px;color:white;
+  background:linear-gradient(110deg,#6688ff,#a16bff);
+  font-size:11px;font-weight:850
+}
+.content{flex:1;min-height:0;overflow-y:auto;scroll-behavior:smooth}
+.page{display:none;max-width:1000px;margin:auto;padding:25px 30px 30px}
+.page.active{display:block;animation:appear .25s ease}
+@keyframes appear{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.hero{text-align:center;padding:25px 10px 24px}
+.orb{
+  width:82px;height:82px;border-radius:28px;margin:0 auto 21px;
+  display:grid;place-items:center;font-size:40px;
+  background:linear-gradient(135deg,#263d8b,#713a9e);
+  border:1px solid #a49aff66;box-shadow:0 0 42px #6c61ff35
+}
+.eyebrow{
+  display:inline-block;padding:7px 12px;border-radius:30px;
+  border:1px solid #718cff40;color:#a9bcff;background:#617dff12;
+  font-size:10px;font-weight:800;letter-spacing:1.3px
+}
+h1{font-size:clamp(30px,4vw,45px);line-height:1.15;margin:17px 0 12px;letter-spacing:-1.2px}
+.gradient{
+  background:linear-gradient(100deg,#79a7ff,#b58aff,#efa5ff);
+  -webkit-background-clip:text;background-clip:text;color:transparent
+}
+.subtitle{max-width:490px;margin:0 auto;color:var(--muted);font-size:13px;line-height:1.9}
+.section-heading{font-size:15px;font-weight:800;margin:17px 0 13px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.card{
+  text-align:left;padding:17px 14px;border:1px solid var(--border);
+  border-radius:18px;background:linear-gradient(145deg,var(--panel),#0e1425);
+  color:var(--text);min-height:143px;transition:transform .2s,border-color .2s
+}
+.card:hover{transform:translateY(-3px);border-color:#7288ff80}
+.card-icon{
+  width:40px;height:40px;border-radius:13px;display:grid;place-items:center;
+  font-size:21px;background:linear-gradient(135deg,#314b9b88,#8547a966);
+  margin-bottom:13px
+}
+.card-title{font-size:13px;font-weight:800;margin-bottom:6px}
+.card-desc{font-size:11px;line-height:1.6;color:var(--muted)}
+.chat-shell{
+  margin-top:21px;border:1px solid var(--border);border-radius:20px;
+  background:var(--panel);overflow:hidden
+}
+.chat-head{
+  height:53px;padding:0 16px;display:flex;align-items:center;
+  justify-content:space-between;border-bottom:1px solid var(--border)
+}
+.chat-head-title{font-size:12px;font-weight:800}
+.chat-head-right{display:flex;align-items:center;gap:12px}
+.chat-clear{font-size:11px;color:var(--muted);background:none;border:0}
+.messages{
+  min-height:155px;max-height:38vh;overflow-y:auto;padding:17px;
+  display:flex;flex-direction:column;gap:14px
+}
+.welcome-msg{
+  margin:auto;text-align:center;color:var(--muted);
+  font-size:12px;line-height:1.9;padding:20px 5px
+}
+.message{display:flex;gap:9px;align-items:flex-start;max-width:95%}
+.message.user{align-self:flex-end;flex-direction:row-reverse}
+.avatar{
+  width:29px;height:29px;flex-shrink:0;border-radius:10px;
+  display:grid;place-items:center;font-size:15px;
+  background:linear-gradient(135deg,#526fff,#9a58ee)
+}
+.user .avatar{background:#27385f}
+.bubble{
+  padding:10px 13px;border-radius:14px;background:var(--panel2);
+  border:1px solid var(--border);font-size:13px;line-height:1.75;
+  white-space:pre-wrap;overflow-wrap:anywhere
+}
+.user .bubble{background:var(--user);border-color:#617eff30}
+.composer{padding:12px;border-top:1px solid var(--border)}
+.input-wrap{
+  display:flex;align-items:flex-end;gap:9px;padding:7px 7px 7px 13px;
+  border:1px solid #7588ff48;border-radius:16px;background:var(--bg)
+}
+#messageInput{
+  flex:1;min-width:0;resize:none;max-height:110px;min-height:36px;
+  padding:8px 0;color:var(--text);background:transparent;border:0;
+  outline:none;font-size:13px
+}
+#messageInput::placeholder{color:var(--muted)}
+.send-btn{
+  width:40px;height:40px;flex-shrink:0;border:0;border-radius:12px;
+  color:white;font-size:19px;background:linear-gradient(135deg,#6485ff,#a36bff)
+}
+.send-btn:disabled{opacity:.5}
+.hint{text-align:center;font-size:9px;color:var(--muted);margin:9px 0 1px}
+.page-title{font-size:29px;font-weight:850;margin:10px 0}
+.explore-intro{margin-bottom:24px}
+.profile-box{
+  border:1px solid var(--border);border-radius:20px;background:var(--panel);
+  padding:22px;margin:20px auto;max-width:560px
+}
+.profile-logo{
+  width:72px;height:72px;margin:0 auto 14px;border-radius:24px;
+  display:grid;place-items:center;font-size:35px;
+  background:linear-gradient(135deg,#5278ff,#a45bff);
+  box-shadow:0 0 28px #775dff35
+}
+.profile-row{
+  display:flex;justify-content:space-between;gap:12px;padding:14px 0;
+  border-bottom:1px solid var(--border);font-size:12px
+}
+.profile-row:last-child{border:0}
+.muted{color:var(--muted)}
+.bottom-nav{display:none}
+.footer{text-align:center;font-size:10px;color:var(--muted);padding:20px 0 4px}
+.overlay{display:none}
+.light{
+  --bg:#f2f4ff;--side:#e9edff;--panel:#fff;--panel2:#edf0ff;
+  --text:#1a2140;--muted:#68708b;--border:rgba(30,40,80,.13);--user:#dce4ff
+}
+.light .topbar{background:rgba(242,244,255,.92)}
+.light .card{background:linear-gradient(145deg,#fff,#f0f2ff)}
+.light .input-wrap{background:#fff}
+.light .bubble{background:#edf0ff}
+.light .user .bubble{background:#dce4ff}
+.light .new-chat{color:white}
+.light .history-item{color:#515b7c}
+.light .history-item.active,.light .history-item:hover{background:#d8dfff;color:#20284c}
+.light .pro-card{background:linear-gradient(135deg,#dfe5ff,#eee0ff)}
+.light .pro-card p{color:#535c83}
+@media(min-width:1200px){
+  .page{padding-left:45px;padding-right:45px}
+}
+@media(max-width:760px){
+  body{overflow:hidden}
+  .sidebar{
+    position:fixed;left:0;top:0;bottom:0;width:min(285px,85vw);
+    transform:translateX(-105%);box-shadow:12px 0 40px #0005
+  }
+  .sidebar.open{transform:translateX(0)}
+  .overlay{
+    display:block;position:fixed;inset:0;background:#0008;
+    z-index:25;opacity:0;pointer-events:none;transition:opacity .2s
+  }
+  .overlay.show{opacity:1;pointer-events:auto}
+  .main{width:100%;height:100dvh}
+  .topbar{height:61px;padding:0 12px}
+  .menu-btn{display:grid;width:35px;height:35px}
+  .top-left{gap:9px}
+  .top-title{font-size:12px}
+  .status{font-size:9px}
+  .theme-btn{width:35px;height:35px}
+  .pro-top{padding:9px 10px;font-size:10px}
+  .page{padding:17px 12px 25px}
+  .hero{padding:18px 5px 19px}
+  .orb{width:68px;height:68px;border-radius:23px;font-size:33px;margin-bottom:17px}
+  h1{font-size:32px}
+  .subtitle{font-size:12px}
+  .cards{grid-template-columns:1fr;gap:9px}
+  .card{min-height:0;padding:12px;display:flex;align-items:center;gap:12px}
+  .card-icon{margin:0;flex-shrink:0}
+  .card-copy{flex:1}
+  .card-title{margin-bottom:4px}
+  .section-heading{margin-top:15px}
+  .chat-shell{margin-top:17px;border-radius:17px}
+  .messages{min-height:125px;max-height:30vh;padding:12px}
+  .bottom-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;z-index:15;
+    height:65px;padding:6px 8px calc(6px + env(safe-area-inset-bottom));
+    justify-content:space-around;background:rgba(10,14,29,.96);
+    backdrop-filter:blur(20px);border-top:1px solid var(--border)
+  }
+  .nav-btn{
+    flex:1;min-width:0;border:0;border-radius:12px;background:transparent;
+    color:var(--muted);font-size:10px;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;gap:3px
+  }
+  .nav-icon{font-size:19px}
+  .nav-btn.active{color:#a9b9ff;background:#7087ff17}
+  .content{padding-bottom:65px}
+  .light .bottom-nav{background:rgba(242,244,255,.97)}
 }
 </style>
 </head>
+
 <body>
-<div class="layout">
-<aside class="sidebar">
-  <div class="brand"><div class="logo">AN</div><span>AN AI</span></div>
-  <button class="side-btn" id="newSide">＋ &nbsp; New chat</button>
-  <div class="side-label">YOUR ASSISTANT</div>
-  <div class="history">✦ &nbsp; Artificial Neural Intelligence</div>
-  <div class="side-bottom">
-    <button class="side-btn" id="themeSide">☀️ &nbsp; Switch theme</button>
-    <div class="history">● &nbsp; <span class="status"></span>AI assistant</div>
-  </div>
-</aside>
-
-<main class="main">
-  <header class="topbar">
-    <div class="mobile-brand"><div class="logo">AN</div> AN AI</div>
-    <div class="top-title">Chat <span style="color:var(--muted);font-weight:400">▾</span></div>
-    <div class="top-actions">
-      <button class="icon-btn" id="newTop" title="New chat">＋</button>
-      <button class="icon-btn" id="themeTop" title="Switch theme">☼</button>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">🧠</div>
+      <div>
+        <div class="brand-name"><span>AN</span> AI</div>
+        <div class="brand-sub">ARTIFICIAL NEURAL INTELLIGENCE</div>
+      </div>
     </div>
-  </header>
 
-  <section class="messages" id="chat">
-    <div class="welcome" id="welcome">
-      <div class="welcome-logo">AN</div>
-      <h1>What can I help with?</h1>
-      <p>Your ideas start here. Ask AN AI anything.</p>
+    <button class="new-chat" id="newChatBtn"><span class="plus">＋</span> New Chat</button>
+    <div class="side-label">YOUR CONVERSATIONS</div>
+    <div class="history" id="history">
+      <div class="empty-history">Your recent chats will appear here.</div>
     </div>
+
+    <div class="sidebar-bottom">
+      <button class="side-link" data-page="explorePage"><span class="side-icon">✧</span> Explore AN AI</button>
+      <button class="side-link" data-page="profilePage"><span class="side-icon">◎</span> My Profile</button>
+      <div class="pro-card">
+        <strong>✦ AN AI PRO</strong>
+        <p>Discover the premium experience of your personal AI.</p>
+        <button id="proSideBtn">Explore PRO</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="overlay" id="overlay"></div>
+
+  <section class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+        <div>
+          <div class="top-title">AN AI Assistant</div>
+          <div class="status">Ready to help you</div>
+        </div>
+      </div>
+      <div class="top-right">
+        <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">☀️</button>
+        <button class="pro-top" id="proTopBtn">✦ PRO</button>
+      </div>
+    </header>
+
+    <div class="content" id="content">
+      <section class="page active" id="homePage">
+        <div class="hero">
+          <div class="orb">🧠</div>
+          <span class="eyebrow">✦ YOUR AI, YOUR WORLD</span>
+          <h1>Hello, <span class="gradient">Asif!</span><br>What's on your mind?</h1>
+          <p class="subtitle">Your ideas deserve intelligence. Learn something new, explore your curiosity, and build something amazing with AN AI.</p>
+        </div>
+
+        <div class="section-heading">✦ Explore AN AI</div>
+        <div class="cards">
+          <button class="card" data-prompt="Help me study Class 12 Science in simple Hinglish.">
+            <div class="card-icon">📚</div>
+            <div class="card-copy"><div class="card-title">Study Help</div><div class="card-desc">Notes, concepts and exam preparation.</div></div>
+          </button>
+          <button class="card" data-prompt="Help me continue building my AN AI project in Termux, step by step.">
+            <div class="card-icon">💻</div>
+            <div class="card-copy"><div class="card-title">Coding & Termux</div><div class="card-desc">Learn coding and build your own projects.</div></div>
+          </button>
+          <button class="card" data-prompt="Give me motivation to work toward my goals today.">
+            <div class="card-icon">🚀</div>
+            <div class="card-copy"><div class="card-title">Motivation</div><div class="card-desc">Stay focused and keep moving forward.</div></div>
+          </button>
+        </div>
+
+        <div class="chat-shell" id="chatShell">
+          <div class="chat-head">
+            <span class="chat-head-title">💬 Your Conversation</span>
+            <div class="chat-head-right">
+              <span class="status">Online</span>
+              <button class="chat-clear" id="clearBtn">＋ New</button>
+            </div>
+          </div>
+          <div class="messages" id="messages">
+            <div class="welcome-msg" id="welcomeMsg">✨ Your next idea starts here.<br>Send a message to begin chatting.</div>
+          </div>
+          <div class="composer">
+            <div class="input-wrap">
+              <textarea id="messageInput" rows="1" placeholder="Message AN AI..." aria-label="Message AN AI"></textarea>
+              <button class="send-btn" id="sendBtn" aria-label="Send message">➤</button>
+            </div>
+            <div class="hint">AN AI may make mistakes. Check important information.</div>
+          </div>
+        </div>
+        <div class="footer">Made with 💜 by you · AN AI</div>
+      </section>
+
+      <section class="page" id="chatPage">
+        <div class="page-title">Your <span class="gradient">AI Chat</span></div>
+        <p class="subtitle" style="margin:0;text-align:left">Ask a question or continue your conversation.</p>
+        <div id="chatPlaceholder"></div>
+      </section>
+
+      <section class="page" id="explorePage">
+        <div class="hero explore-intro">
+          <span class="eyebrow">DISCOVER MORE</span>
+          <h1>Explore <span class="gradient">possibilities.</span></h1>
+          <p class="subtitle">Choose a topic and start your next conversation.</p>
+        </div>
+        <div class="cards">
+          <button class="card" data-prompt="Explain a difficult Class 12 Science topic in simple Hinglish.">
+            <div class="card-icon">🎓</div><div class="card-copy"><div class="card-title">Learning</div><div class="card-desc">Understand difficult topics simply.</div></div>
+          </button>
+          <button class="card" data-prompt="Help me write and debug JavaScript code for my AN AI website.">
+            <div class="card-icon">⚡</div><div class="card-copy"><div class="card-title">Programming</div><div class="card-desc">Code, debug and create projects.</div></div>
+          </button>
+          <button class="card" data-prompt="Help me make a realistic plan for my goals this week.">
+            <div class="card-icon">🎯</div><div class="card-copy"><div class="card-title">Goals & Planning</div><div class="card-desc">Turn your ideas into manageable steps.</div></div>
+          </button>
+        </div>
+      </section>
+
+      <section class="page" id="profilePage">
+        <div class="hero">
+          <div class="profile-logo">🧠</div>
+          <h1>Your <span class="gradient">AN AI</span></h1>
+          <p class="subtitle">A personal AI project built with curiosity and determination.</p>
+        </div>
+        <div class="profile-box">
+          <div class="profile-row"><span class="muted">Assistant</span><strong>AN AI</strong></div>
+          <div class="profile-row"><span class="muted">Project</span><strong>Personal AI</strong></div>
+          <div class="profile-row"><span class="muted">Interface</span><strong>Premium Edition</strong></div>
+          <div class="profile-row"><span class="muted">Appearance</span><strong>Dark / Light</strong></div>
+          <button class="pro-top" style="margin-top:18px" id="profileProBtn">✦ Explore PRO</button>
+        </div>
+      </section>
+    </div>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-page="homePage"><span class="nav-icon">⌂</span>Home</button>
+      <button class="nav-btn" data-page="chatPage"><span class="nav-icon">◉</span>Chat</button>
+      <button class="nav-btn" data-page="explorePage"><span class="nav-icon">✧</span>Explore</button>
+      <button class="nav-btn" data-page="profilePage"><span class="nav-icon">◎</span>Profile</button>
+    </nav>
   </section>
-
-  <div class="composer-area">
-    <div class="composer-wrap">
-      <form class="composer" id="form">
-        <textarea id="input" rows="1" placeholder="Message AN AI..." required></textarea>
-        <button class="send" id="send" type="submit" aria-label="Send">↑</button>
-      </form>
-      <div class="disclaimer">AN AI can make mistakes. Check important information.</div>
-    </div>
-  </div>
-</main>
 </div>
 
 <script>
-const form=document.getElementById('form');
-const input=document.getElementById('input');
-const chat=document.getElementById('chat');
-const send=document.getElementById('send');
-const welcome=document.getElementById('welcome');
+const $ = id => document.getElementById(id);
+const input = $('messageInput');
+const sendBtn = $('sendBtn');
+const messages = $('messages');
+const chatShell = $('chatShell');
 
-function addMessage(text,type){
-  welcome.classList.add('hidden');
-  const row=document.createElement('div');
-  row.className='message '+type;
-  const avatar=document.createElement('div');
-  avatar.className='avatar';
-  avatar.textContent=type==='user'?'Y':'AN';
-  const content=document.createElement('div');
-  content.className='content';
-  content.textContent=text;
-  row.append(avatar,content);
-  chat.appendChild(row);
-  chat.scrollTop=chat.scrollHeight;
-  return content;
+let chats = [];
+let currentChatId = null;
+let busy = false;
+
+try {
+  const saved = JSON.parse(localStorage.getItem('anai-chats') || '[]');
+  if (Array.isArray(saved)) chats = saved;
+} catch (_) { chats = []; }
+
+function saveChats() {
+  try { localStorage.setItem('anai-chats', JSON.stringify(chats)); }
+  catch (_) {}
 }
 
-async function submitMessage(message){
-  if(!message||send.disabled)return;
-  addMessage(message,'user');
-  input.value='';
-  input.style.height='auto';
-  send.disabled=true;
-  const answer=addMessage('Thinking…','bot');
+function makeId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+}
 
-  try{
-    const response=await fetch('/chat',{
+function currentChat() {
+  return chats.find(c => c.id === currentChatId);
+}
+
+function renderHistory() {
+  const history = $('history');
+  history.replaceChildren();
+
+  if (!chats.length) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-history';
+    empty.textContent = 'Your recent chats will appear here.';
+    history.appendChild(empty);
+    return;
+  }
+
+  [...chats].reverse().forEach(chat => {
+    const btn = document.createElement('button');
+    btn.className = 'history-item' + (chat.id === currentChatId ? ' active' : '');
+    const icon = document.createElement('span');
+    icon.textContent = '▤';
+    const title = document.createElement('span');
+    title.className = 'history-title';
+    title.textContent = chat.title || 'New conversation';
+    btn.append(icon,title);
+    btn.addEventListener('click', () => {
+      loadChat(chat.id);
+      closeSidebar();
+      showPage('chatPage');
+    });
+    history.appendChild(btn);
+  });
+}
+
+function addMessage(text, type) {
+  const welcome = $('welcomeMsg');
+  if (welcome) welcome.remove();
+
+  const row = document.createElement('div');
+  row.className = 'message ' + type;
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.textContent = type === 'user' ? '👤' : '🧠';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.textContent = text;
+  row.append(avatar,bubble);
+  messages.appendChild(row);
+  messages.scrollTop = messages.scrollHeight;
+  return bubble;
+}
+
+function renderMessages(chat) {
+  messages.replaceChildren();
+  if (!chat || !chat.messages.length) {
+    const welcome = document.createElement('div');
+    welcome.className = 'welcome-msg';
+    welcome.id = 'welcomeMsg';
+    welcome.innerHTML = '✨ Your next idea starts here.<br>Send a message to begin chatting.';
+    messages.appendChild(welcome);
+    return;
+  }
+  chat.messages.forEach(m => addMessage(m.text,m.role));
+}
+
+function startNewChat() {
+  if (busy) return;
+  currentChatId = makeId();
+  chats.push({id:currentChatId,title:'New conversation',messages:[]});
+  saveChats();
+  renderHistory();
+  renderMessages(currentChat());
+  showPage('homePage');
+  input.value = '';
+  input.focus();
+  closeSidebar();
+}
+
+function loadChat(id) {
+  currentChatId = id;
+  renderMessages(currentChat());
+  renderHistory();
+}
+
+function saveCurrentMessage(role,text) {
+  const chat = currentChat();
+  if (!chat) return;
+  chat.messages.push({role,text});
+  if (role === 'user' && chat.title === 'New conversation') {
+    chat.title = text.length >  thirty ? text.slice(0, thirty) + '…' : text;
+  }
+  saveChats();
+  renderHistory();
+}
+const thirty = 30;
+
+async function sendMessage() {
+  const text = input.value.trim();
+  if (!text || busy) return;
+
+  if (!currentChat()) {
+    currentChatId = makeId();
+    chats.push({id:currentChatId,title:'New conversation',messages:[]});
+  }
+
+  const chat = currentChat();
+  addMessage(text,'user');
+  saveCurrentMessage('user',text);
+
+  input.value = '';
+  input.style.height = '36px';
+  busy = true;
+  sendBtn.disabled = true;
+  const replyBubble = addMessage('Thinking...','assistant');
+
+  try {
+    const response = await fetch('/chat',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({message})
+      body:JSON.stringify({message:text})
     });
-    const data=await response.json();
-    if(!response.ok) throw new Error(data.error||'Request failed.');
-    answer.textContent=data.reply||'No reply received.';
-  }catch(error){
-    answer.textContent='Could not get a reply: '+error.message;
-  }finally{
-    send.disabled=false;
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Request failed.');
+    const reply = data.reply || 'No reply received. Please try again.';
+    replyBubble.textContent = reply;
+    saveCurrentMessage('assistant',reply);
+  } catch (error) {
+    const msg = 'Connection problem: ' + error.message + '. Check that your AN AI server is running, then try again.';
+    replyBubble.textContent = msg;
+    saveCurrentMessage('assistant',msg);
+  } finally {
+    busy = false;
+    sendBtn.disabled = false;
+    messages.scrollTop = messages.scrollHeight;
     input.focus();
-    chat.scrollTop=chat.scrollHeight;
   }
 }
 
-form.addEventListener('submit',e=>{
-  e.preventDefault();
-  submitMessage(input.value.trim());
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const page = $(pageId);
+  if (page) page.classList.add('active');
+
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.toggle('active',b.dataset.page === pageId);
+  });
+
+  if (pageId === 'chatPage') {
+    $('chatPlaceholder').appendChild(chatShell);
+    chatShell.style.marginTop = '22px';
+  } else if (pageId === 'homePage') {
+    $('homePage').appendChild(chatShell);
+    chatShell.style.marginTop = '21px';
+  }
+  $('content').scrollTop = 0;
+}
+
+document.querySelectorAll('[data-page]').forEach(btn => {
+  btn.addEventListener('click',() => {
+    showPage(btn.dataset.page);
+    closeSidebar();
+  });
 });
-input.addEventListener('input',()=>{
-  input.style.height='auto';
-  input.style.height=Math.min(input.scrollHeight,160)+'px';
+
+document.querySelectorAll('[data-prompt]').forEach(btn => {
+  btn.addEventListener('click',() => {
+    showPage('homePage');
+    input.value = btn.dataset.prompt;
+    input.focus();
+    chatShell.scrollIntoView({behavior:'smooth',block:'center'});
+  });
 });
-input.addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&!e.shiftKey){
+
+$('newChatBtn').addEventListener('click',startNewChat);
+$('clearBtn').addEventListener('click',startNewChat);
+sendBtn.addEventListener('click',sendMessage);
+
+input.addEventListener('keydown',e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
-    form.requestSubmit();
+    sendMessage();
   }
 });
+input.addEventListener('input',() => {
+  input.style.height = '36px';
+  input.style.height = Math.min(input.scrollHeight,110) + 'px';
+});
 
-function newChat(){
-  chat.innerHTML='';
-  welcome.classList.remove('hidden');
-  chat.appendChild(welcome);
-  input.value='';
-  input.focus();
-}
-document.getElementById('newSide').addEventListener('click',newChat);
-document.getElementById('newTop').addEventListener('click',newChat);
-
-function toggleTheme(){
+$('themeBtn').addEventListener('click',() => {
   document.body.classList.toggle('light');
-  const light=document.body.classList.contains('light');
-  try{localStorage.setItem('an-ai-theme',light?'light':'dark')}catch(e){}
+  const light = document.body.classList.contains('light');
+  $('themeBtn').textContent = light ? '🌙' : '☀️';
+  try { localStorage.setItem('anai-theme',light ? 'light' : 'dark'); } catch (_) {}
+});
+
+try {
+  if (localStorage.getItem('anai-theme') === 'light') {
+    document.body.classList.add('light');
+    $('themeBtn').textContent = '🌙';
+  }
+} catch (_) {}
+
+function showPro() {
+  alert('AN AI PRO ✦\n\nThis is a premium-style interface. A real subscription or payment system has not been connected yet.');
 }
-document.getElementById('themeSide').addEventListener('click',toggleTheme);
-document.getElementById('themeTop').addEventListener('click',toggleTheme);
-try{
-  if(localStorage.getItem('an-ai-theme')==='light')document.body.classList.add('light');
-}catch(e){}
+$('proTopBtn').addEventListener('click',showPro);
+$('proSideBtn').addEventListener('click',showPro);
+$('profileProBtn').addEventListener('click',showPro);
+
+const sidebar = $('sidebar');
+const overlay = $('overlay');
+function openSidebar() {
+  sidebar.classList.add('open');
+  overlay.classList.add('show');
+}
+function closeSidebar() {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('show');
+}
+$('menuBtn').addEventListener('click',openSidebar);
+overlay.addEventListener('click',closeSidebar);
+
+renderHistory();
+if (chats.length) {
+  currentChatId = chats[chats.length - 1].id;
+  renderMessages(currentChat());
+}
 </script>
 </body>
 </html>
